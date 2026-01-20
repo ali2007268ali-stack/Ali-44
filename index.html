@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>متجري</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🛍️ متجري للملابس</h1>
+    <div id="user-info">
+      <button onclick="showLogin()">تسجيل الدخول / إنشاء حساب</button>
+    </div>
+  </header>
+
+  <!-- المنتجات -->
+  <div class="container">
+    <div class="product">
+      <img src="images/1.JPG" alt="قميص">
+      <h3>قميص رجالي</h3>
+      <p>150 جنيه</p>
+      <button onclick="addToCart('قميص رجالي', 150)">إضافة للسلة</button>
+    </div>
+    <div class="product">
+      <img src="images/jeans.jpg" alt="بنطال">
+      <h3>بنطال جينز</h3>
+      <p>250 جنيه</p>
+      <button onclick="addToCart('بنطال جينز', 250)">إضافة للسلة</button>
+    </div>
+    <div class="product">
+      <img src="images/jacket.jpg" alt="جاكيت">
+      <h3>جاكيت شتوي</h3>
+      <p>400 جنيه</p>
+      <button onclick="addToCart('جاكيت شتوي', 400)">إضافة للسلة</button>
+    </div>
+  </div>
+
+  <!-- السلة -->
+  <div id="cart">
+    <h4>🛒 السلة</h4>
+    <ul id="cart-items"></ul>
+    <p><strong>الإجمالي: </strong><span id="total">0</span> جنيه</p>
+
+    <h4>📍 بيانات الطلب</h4>
+    <form id="order-form">
+      <input type="text" id="username" placeholder="الاسم" required><br><br>
+      <input type="text" id="address" placeholder="العنوان" required><br><br>
+      <input type="tel" id="phone" placeholder="رقم الموبايل" required><br><br>
+      <button type="submit">تأكيد الطلب</button>
+    </form>
+  </div>
+
+  <!-- نافذة تسجيل الدخول -->
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="hideLogin()">&times;</span>
+      <h2>تسجيل الدخول / إنشاء حساب</h2>
+      <form id="login-form">
+        <input type="text" id="regName" placeholder="الاسم" required><br><br>
+        <input type="email" id="regEmail" placeholder="الإيميل" required><br><br>
+        <input type="tel" id="regPhone" placeholder="رقم الموبايل" required><br><br>
+        <input type="text" id="regAddress" placeholder="العنوان" required><br><br>
+        <input type="password" id="regPass" placeholder="كلمة المرور" required><br><br>
+        <button type="submit">حفظ الحساب</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تسجيل الدخول - متجري</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="login-container">
+    <h1>🛍️ متجري للملابس</h1>
+
+    <div id="register-section">
+      <h2>إنشاء حساب جديد</h2>
+      <input type="text" id="regName" placeholder="الاسم الكامل" required>
+      <input type="email" id="regEmail" placeholder="البريد الإلكتروني" required>
+      <input type="tel" id="regPhone" placeholder="رقم الموبايل" required>
+      <input type="password" id="regPass" placeholder="كلمة المرور" required>
+      <button onclick="sendCode()">إرسال كود التأكيد</button>
+    </div>
+
+    <div id="verify-section" style="display:none;">
+      <h3>أدخل كود التأكيد الذي وصلك</h3>
+      <input type="text" id="verifyCodeInput" placeholder="الكود">
+      <button onclick="verifyCode()">تأكيد التسجيل</button>
+    </div>
+
+    <div id="login-section" style="display:none;">
+      <h2>تسجيل الدخول</h2>
+      <input type="email" id="loginEmail" placeholder="البريد الإلكتروني">
+      <input type="password" id="loginPass" placeholder="كلمة المرور">
+      <button onclick="login()">تسجيل الدخول</button>
+    </div>
+  </div>
+
+  <script>
+    let generatedCode = "";
+
+    function sendCode() {
+      const name = document.getElementById("regName").value.trim();
+      const email = document.getElementById("regEmail").value.trim();
+      const phone = document.getElementById("regPhone").value.trim();
+      const pass = document.getElementById("regPass").value.trim();
+
+      if (!name || !email || !phone || !pass) {
+        alert("من فضلك املأ جميع البيانات");
+        return;
+      }
+
+      generatedCode = Math.floor(1000 + Math.random() * 9000).toString();
+      alert("كود التأكيد الخاص بك هو: " + generatedCode);
+
+      document.getElementById("register-section").style.display = "none";
+      document.getElementById("verify-section").style.display = "block";
+    }
+
+    function verifyCode() {
+      const inputCode = document.getElementById("verifyCodeInput").value.trim();
+
+      if (inputCode === generatedCode) {
+        alert("تم تأكيد الحساب بنجاح ✅");
+        const user = {
+          name: document.getElementById("regName").value,
+          email: document.getElementById("regEmail").value,
+          phone: document.getElementById("regPhone").value,
+          pass: document.getElementById("regPass").value
+        };
+        localStorage.setItem("user", JSON.stringify(user));
+
+        document.getElementById("verify-section").style.display = "none";
+        document.getElementById("login-section").style.display = "block";
+      } else {
+        alert("الكود غير صحيح ❌");
+      }
+    }
+
+    function login() {
+      const email = document.getElementById("loginEmail").value.trim();
+      const pass = document.getElementById("loginPass").value.trim();
+      const savedUser = JSON.parse(localStorage.getItem("user"));
+
+      if (savedUser && email === savedUser.email && pass === savedUser.pass) {
+        alert("تم تسجيل الدخول بنجاح 🎉");
+        window.location.href = "market.html";
+      } else {
+        alert("بيانات الدخول غير صحيحة ❌");
+      }
+    }
+  </script>
+</body>
+</html>
+<!DOCTYPE html>

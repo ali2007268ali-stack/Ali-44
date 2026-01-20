@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>لوحة المسؤول - متجري</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🧑‍💼 لوحة تحكم المسؤول</h1>
+    <button onclick="logout()">تسجيل الخروج</button>
+  </header>
+
+  <!-- إضافة منتج جديد -->
+  <section class="admin-section">
+    <h2>➕ إضافة منتج جديد</h2>
+    <input type="text" id="prodName" placeholder="اسم المنتج">
+    <input type="number" id="prodPrice" placeholder="السعر">
+    <input type="file" id="prodImage" accept="image/*">
+    <button onclick="addProduct()">إضافة المنتج</button>
+  </section>
+
+  <!-- قائمة المنتجات -->
+  <section class="admin-section">
+    <h2>🧾 المنتجات الحالية</h2>
+    <div id="admin-products"></div>
+  </section>
+
+  <!-- الطلبات -->
+  <section class="admin-section">
+    <h2>📦 الطلبات الواردة</h2>
+    <div id="orders"></div>
+  </section>
+
+  <script>
+    // عرض المنتجات الحالية
+    function displayProducts() {
+      const products = JSON.parse(localStorage.getItem("products")) || [];
+      const div = document.getElementById("admin-products");
+      div.innerHTML = "";
+
+      if (products.length === 0) {
+        div.innerHTML = "<p>لا توجد منتجات حالياً.</p>";
+        return;
+      }
+
+      products.forEach((p, i) => {
+        const prod = document.createElement("div");
+        prod.className = "product";
+        prod.innerHTML = `
+          <img src="${p.image}" alt="${p.name}">
+          <h3>${p.name}</h3>
+          <p>${p.price} جنيه</p>
+          <button onclick="deleteProduct(${i})">🗑️ حذف المنتج</button>
+        `;
+        div.appendChild(prod);
+      });
+    }
+
+    // إضافة منتج جديد
+    function addProduct() {
+      const name = document.getElementById("prodName").value.trim();
+      const price = parseFloat(document.getElementById("prodPrice").value);
+      const imageInput = document.getElementById("prodImage");
+
+      if (!name || !price || !imageInput.files[0]) {
+        alert("من فضلك املأ جميع الحقول");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const newProduct = { name, price, image: e.target.result };
+        let products = JSON.parse(localStorage.getItem("products")) || [];
+        products.push(newProduct);
+        localStorage.setItem("products", JSON.stringify(products));
+
+        alert("✅ تمت إضافة المنتج بنجاح");
+        displayProducts();
+        imageInput.value = "";
+        document.getElementById("prodName").value = "";
+        document.getElementById("prodPrice").value = "";
+      };
+      reader.readAsDataURL(imageInput.files[0]);
+    }
+
+    // حذف منتج
+    function deleteProduct(index) {
+      let products = JSON.parse(localStorage.getItem("products")) || [];
+      products.splice(index, 1);
+      localStorage.setItem("products", JSON.stringify(products));
+      displayProducts();
+    }
+
+    // عرض الطلبات
+    function displayOrders() {
+      const orders = JSON.parse(localStorage.getItem("orders")) || [];
+      const div = document.getElementById("orders");
+      div.innerHTML = "";
+
+      if (orders.length === 0) {
+        div.innerHTML = "<p>لا توجد طلبات حالياً.</p>";
+        return;
+      }
+
+      orders.forEach((order, i) => {
+        const ord = document.createElement("div");
+        ord.className = "order";
+        let itemsList = "";
+        order.items.forEach(item => {
+          itemsList += `<li>${item.name} - ${item.price} جنيه</li>`;
+        });
+
+        ord.innerHTML = `
+          <h3>👤 ${order.userName}</h3>
+          <p><strong>العنوان:</strong> ${order.address}</p>
+          <p><strong>رقم الهاتف:</strong> ${order.phone}</p>
+          <p><strong>الملاحظات:</strong> ${order.notes}</p>
+          <p><strong>الإجمالي:</strong> ${order.total} جنيه</p>
+          <p><strong>الموقع:</strong> ${order.location || "لم يحدد موقعاً"}</p>
+          <ul>${itemsList}</ul>
+          <button onclick="confirmOrder(${i})">✅ تأكيد الاستلام</button>
+          <button onclick="deleteOrder(${i})">🗑️ حذف الطلب</button>
+        `;
+        div.appendChild(ord);
+      });
+    }
+
+    // تأكيد استلام الطلب
+    function confirmOrder(index) {
+      let orders = JSON.parse(localStorage.getItem("orders")) || [];
+      alert(`✅ تم تأكيد استلام طلب ${orders[index].userName}`);
+      orders.splice(index, 1);
+      localStorage.setItem("orders", JSON.stringify(orders));
+      displayOrders();
+    }
+
+    // حذف الطلب
+    function deleteOrder(index) {
+      let orders = JSON.parse(localStorage.getItem("orders")) || [];
+      orders.splice(index, 1);
+      localStorage.setItem("orders", JSON.stringify(orders));
+      displayOrders();
+    }
+
+    function logout() {
+      window.location.href = "index.html";
+    }
+
+    // تحميل البيانات عند فتح الصفحة
+    displayProducts();
+    displayOrders();
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
